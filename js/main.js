@@ -13,13 +13,13 @@ const card_speed = document.querySelector(".card_speed")
 const card_price = document.querySelector(".card_price")
 const card_color = document.querySelector(".card_color")
 
-let carData = []
+let carData = JSON.parse(localStorage.getItem("cars")) ? JSON.parse(localStorage.getItem("cars")) : []
 
 let addProd = (info)=> {
   
 if (info.length == 0) {
   cards.innerHTML = `
-    <h1>Please, Choose your car. </h1>
+    <h1 class="noCar">There is no car.</h1>
   `
 } else {
 
@@ -52,22 +52,26 @@ if (info.length == 0) {
 }
 }
 
+addProd(carData)
+
 
 
 form.addEventListener("submit", function(event){
-  event.preventDefault()
-  let obj = {
-    img: left_btn.parentElement.querySelector(".inp_url").value,
-    carName: left_btn.parentElement.querySelector(".inp_name").value,
-    carSpeed: left_btn.parentElement.querySelector(".inp_speed").value,
-    carPrice: left_btn.parentElement.querySelector(".inp_price").value,
-    carColor: left_btn.parentElement.querySelector(".inp_color").value,
-    id: Math.random() * 100,
-  }
   if ((inp_url.value && inp_name.value && inp_speed.value && inp_price.value && inp_color.value) == "") {
     alert("Plese enter full information!")
   } else {
+    event.preventDefault()
+    let obj = {
+      img: inp_url.value,
+      carName: inp_name.value,
+      carSpeed: inp_speed.value,
+      carPrice: inp_price.value,
+      carColor: inp_color.value,
+      id: Math.random() * 100,
+    }
+
     carData.push(obj)
+    localStorage.setItem("cars", JSON.stringify(carData))
     addProd(carData)
 
     inp_url.value = ""    
@@ -84,6 +88,8 @@ const removeCar = (id)=> {
   carData = carData.filter((item)=> {
     return item.id != id
   })
+
+  localStorage.setItem('cars', JSON.stringify(carData))
   addProd(carData)
 }
 
